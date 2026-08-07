@@ -14,7 +14,8 @@
       checkboxParent: [], //checkboxの親要素
       checkboxOutput: [], //checkした項目を一括表示する欄※parentと並べること
       checkboxTag: [], //タグ使用時の複数軸対応 ※全てcheckboxであること
-      autoSubmit: false
+      autoSubmit: false,
+      resetButton: null // 絞り込み解除ボタン
     };
     // データ上書き
     var config = $.extend({}, defs, params);
@@ -87,8 +88,8 @@
         case 'text':
           target_selector = form.find('input[type="' + type_setting[i] + '"]');
           loadingCheck(type_setting[i], target_selector);
-          target_selector.keypress(function(e) {
-            if(e.keyCode === 13) {
+          target_selector.keypress(function (e) {
+            if (e.keyCode === 13) {
               form.submit();
             }
           });
@@ -219,5 +220,29 @@
     }
     // checkbox（ここまで）
 
+    // --- 全件表示ボタン（絞り込み解除）---
+    if (config.resetButton) {
+      $(config.resetButton).on('click', function (e) {
+        e.preventDefault();
+
+        // 全ての入力項目をリセット
+        form.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+        form.find('input[type="text"]').val('');
+        form.find('select').prop('selectedIndex', 0);
+        form.find('input[type="hidden"]').val('');
+
+        // 出力欄（checkboxOutput）がある場合は初期テキストに戻す
+        if (checkbox_setting.output.length > 0) {
+          for (let i = 0; i < checkbox_setting.output.length; i++) {
+            if (checkbox_setting.output[i]) {
+              $(checkbox_setting.output[i]).text(checkbox_setting.text[i] || '');
+            }
+          }
+        }
+
+        // --- 絞り込み解除後にフォーム送信 ---
+        form.trigger('submit');
+      });
+    }
   };
 })(jQuery);
