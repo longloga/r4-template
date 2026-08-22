@@ -1,14 +1,3 @@
-
-/*
-  UPDATE 2022.07.05
-  想定している内容
-  1.タブ
-    #tab01, #tab02, #tab03
-  2.タブの中へのリンク
-    #tab01_01, #tab01_02, #tab01_tab02_01
-*/
-
-// 更新　全体的に a[data-href → [data-href
 (function ($) {
   $.fn.tab = function (params) {
     // 0.セッティング
